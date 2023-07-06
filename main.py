@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
+import json
+
 load_dotenv()
 
 scope = "playlist-read-private"  # Adjust the scope based on your needs
@@ -43,6 +45,21 @@ def get_song_info(song):
     song_info["popularity"] = track["popularity"]
     song_info["duration_ms"] = track["duration_ms"]
     song_info["external_urls"] = track["external_urls"]
+
+    audio_features = sp.audio_features(track["id"])[0]
+    song_info["acousticness"] = audio_features["acousticness"]
+    song_info["danceability"] = audio_features["danceability"]
+    song_info["energy"] = audio_features["energy"]
+    song_info["instrumentalness"] = audio_features["instrumentalness"]
+    song_info["liveness"] = audio_features["liveness"]
+    song_info["loudness"] = audio_features["loudness"]
+    song_info["speechiness"] = audio_features["speechiness"]
+    song_info["tempo"] = audio_features["tempo"]
+    song_info["time_signature"] = audio_features["time_signature"]
+    song_info["valence"] = audio_features["valence"]
+    song_info["key"] = audio_features["key"]
+    song_info["mode"] = audio_features["mode"]
+
     return song_info
 
 
@@ -52,4 +69,4 @@ playlist_tracks = get_playlist_tracks(playlist_id)
 
 for song in playlist_tracks:
     song_info = get_song_info(song)
-    print(song_info)
+    print(json.dumps(song_info, indent=4))
